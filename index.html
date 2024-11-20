@@ -93,7 +93,8 @@ body {
   background: var(--light);
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
+  position: relative;
 }
 
 .calendar-day:hover {
@@ -134,6 +135,11 @@ body {
   background: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.action-button.active {
+  background: var(--success);
+  animation: none;
 }
 
 .action-button svg {
@@ -216,6 +222,70 @@ body {
   opacity: 0.3;
   cursor: not-allowed;
 }
+
+.task-detail {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.participants {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.participant {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--secondary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.meeting-tooltip {
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 100;
+  display: none;
+  min-width: 200px;
+}
+
+.calendar-day:hover .meeting-tooltip {
+  display: block;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.meeting-time {
+  color: var(--accent);
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.calendar-day:not(.calendar-week):not(.inactive-day):hover {
+  background-color: rgba(52, 152, 219, 0.1);
+}
 </style>
 </head>
 <body>
@@ -282,34 +352,164 @@ body {
       <div class="calendar-day">3</div>
       
       <div class="calendar-day">4</div>
-      <div class="calendar-day available">5</div>
-      <div class="calendar-day focus-time">6</div>
-      <div class="calendar-day meeting">7</div>
-      <div class="calendar-day available">8</div>
+      <div class="calendar-day available">5
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day focus-time">6
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Horário de Foco: 13:00 - 17:00</div>
+          <p class="task-detail">Sprint Planning</p>
+        </div>
+      </div>
+      <div class="calendar-day meeting">7
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Reunião: 14:00 - 15:30</div>
+          <p class="task-detail">Review de Sprint</p>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+            <div class="participant">AK</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day available">8
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+          </div>
+        </div>
+      </div>
       <div class="calendar-day">9</div>
       <div class="calendar-day">10</div>
       
       <div class="calendar-day">11</div>
-      <div class="calendar-day focus-time">12</div>
-      <div class="calendar-day available">13</div>
-      <div class="calendar-day meeting">14</div>
-      <div class="calendar-day available">15</div>
+      <div class="calendar-day focus-time">12
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Horário de Foco: 13:00 - 17:00</div>
+          <p class="task-detail">Trabalho Individual</p>
+        </div>
+      </div>
+      <div class="calendar-day available">13
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day meeting">14
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Reunião: 14:00 - 15:30</div>
+          <p class="task-detail">Reunião de Acompanhamento</p>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+            <div class="participant">AK</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day available">15
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
       <div class="calendar-day">16</div>
       <div class="calendar-day">17</div>
       
       <div class="calendar-day">18</div>
-      <div class="calendar-day available">19</div>
-      <div class="calendar-day focus-time">20</div>
-      <div class="calendar-day meeting">21</div>
-      <div class="calendar-day available">22</div>
+      <div class="calendar-day available">19
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day focus-time">20
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Horário de Foco: 13:00 - 17:00</div>
+          <p class="task-detail">Trabalho Individual</p>
+        </div>
+      </div>
+      <div class="calendar-day meeting">21
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Reunião: 14:00 - 15:30</div>
+          <p class="task-detail">Reunião de Acompanhamento</p>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+            <div class="participant">AK</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day available">22
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
       <div class="calendar-day">23</div>
       <div class="calendar-day">24</div>
       
       <div class="calendar-day">25</div>
-      <div class="calendar-day focus-time">26</div>
-      <div class="calendar-day available">27</div>
-      <div class="calendar-day meeting">28</div>
-      <div class="calendar-day available">29</div>
+      <div class="calendar-day focus-time">26
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Horário de Foco: 13:00 - 17:00</div>
+          <p class="task-detail">Trabalho Individual</p>
+        </div>
+      </div>
+      <div class="calendar-day available">27
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day meeting">28
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Reunião: 14:00 - 15:30</div>
+          <p class="task-detail">Reunião Final</p>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+            <div class="participant">RS</div>
+            <div class="participant">AK</div>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day available">29
+        <div class="meeting-tooltip">
+          <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+          <div class="participants">
+            <div class="participant">JB</div>
+            <div class="participant">ML</div>
+          </div>
+        </div>
+      </div>
       <div class="calendar-day">30</div>
     </div>
   </div>
@@ -321,6 +521,13 @@ body {
       <div class="task-info">
         <h3>Definição de Requisitos</h3>
         <p>Concluído em 15/03/2024</p>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%"></div>
+        </div>
+        <div class="participants">
+          <div class="participant">JB</div>
+          <div class="participant">ML</div>
+        </div>
       </div>
     </div>
     <div class="task">
@@ -328,6 +535,16 @@ body {
       <div class="task-info">
         <h3>Desenvolvimento Frontend</h3>
         <p>Em andamento - 60% concluído</p>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 60%"></div>
+        </div>
+        <div class="task-detail">
+          Próxima milestone: Implementação de Drag & Drop
+        </div>
+        <div class="participants">
+          <div class="participant">RS</div>
+          <div class="participant">AK</div>
+        </div>
       </div>
     </div>
     <div class="task">
@@ -335,6 +552,16 @@ body {
       <div class="task-info">
         <h3>Testes de Integração</h3>
         <p>Pendente - Início previsto para 20/03/2024</p>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="task-detail">
+          Aguardando conclusão do frontend
+        </div>
+        <div class="participants">
+          <div class="participant">ML</div>
+          <div class="participant">JB</div>
+        </div>
       </div>
     </div>
   </div>
@@ -344,31 +571,95 @@ body {
 document.addEventListener('DOMContentLoaded', () => {
   const markAvailabilityBtn = document.getElementById('markAvailability');
   const calendarDays = document.querySelectorAll('.calendar-day');
+  let isMarkingAvailability = false;
   
   markAvailabilityBtn.addEventListener('click', () => {
-    markAvailabilityBtn.classList.add('highlight');
-    setTimeout(() => {
-      markAvailabilityBtn.classList.remove('highlight');
-    }, 6000);
+    isMarkingAvailability = !isMarkingAvailability;
+    markAvailabilityBtn.classList.toggle('active');
+    
+    if (isMarkingAvailability) {
+      markAvailabilityBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Concluir Marcação`;
+      markAvailabilityBtn.style.background = 'var(--success)';
+    } else {
+      markAvailabilityBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z"/>
+          <path d="M15.5 13.5h.01M15.5 17h.01M11.5 13.5h.01M11.5 17h.01M7.5 13.5h.01M7.5 17h.01"/>
+        </svg>
+        Marcar Disponibilidade`;
+      markAvailabilityBtn.style.background = 'var(--secondary)';
+    }
   });
 
   calendarDays.forEach(day => {
-    if (!isNaN(day.textContent)) {
+    if (!day.classList.contains('calendar-week') && !day.classList.contains('inactive-day')) {
       day.addEventListener('click', () => {
-        if (day.classList.contains('available')) {
-          day.classList.remove('available');
-          day.classList.add('focus-time');
-        } else if (day.classList.contains('focus-time')) {
-          day.classList.remove('focus-time');
-          day.classList.add('meeting');
-        } else if (day.classList.contains('meeting')) {
-          day.classList.remove('meeting');
-          day.classList.add('available');
+        if (isMarkingAvailability) {
+          if (!day.classList.contains('available')) {
+            day.classList.add('available');
+            // Add tooltip with default availability time
+            if (!day.querySelector('.meeting-tooltip')) {
+              day.innerHTML += `
+                <div class="meeting-tooltip">
+                  <div class="meeting-time">Disponível: 09:00 - 17:00</div>
+                  <div class="participants">
+                    <div class="participant">JB</div>
+                  </div>
+                </div>`;
+            }
+          } else {
+            day.classList.remove('available');
+            const tooltip = day.querySelector('.meeting-tooltip');
+            if (tooltip) {
+              tooltip.remove();
+            }
+          }
         } else {
-          day.classList.add('available');
+          // Original calendar day click behavior
+          if (day.classList.contains('available')) {
+            day.classList.remove('available');
+            day.classList.add('focus-time');
+          } else if (day.classList.contains('focus-time')) {
+            day.classList.remove('focus-time');
+            day.classList.add('meeting');
+          } else if (day.classList.contains('meeting')) {
+            day.classList.remove('meeting');
+          }
+        }
+      });
+
+      // Add hover effect to show which days are clickable
+      day.addEventListener('mouseenter', () => {
+        if (isMarkingAvailability) {
+          day.style.cursor = 'pointer';
+          day.style.background = 'rgba(46, 204, 113, 0.2)';
+        }
+      });
+
+      day.addEventListener('mouseleave', () => {
+        if (isMarkingAvailability) {
+          day.style.background = '';
         }
       });
     }
+  });
+
+  const tooltips = document.querySelectorAll('.meeting-tooltip');
+  tooltips.forEach(tooltip => {
+    const parent = tooltip.parentElement;
+    parent.addEventListener('mouseenter', () => {
+      const rect = parent.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      
+      if (rect.left + tooltipRect.width > window.innerWidth) {
+        tooltip.style.right = '0';
+        tooltip.style.left = 'auto';
+      }
+    });
   });
 
   const progressTasks = document.querySelectorAll('.status-progress');
